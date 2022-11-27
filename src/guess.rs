@@ -51,7 +51,7 @@ impl EntropyGuess {
 
     fn total_cmp(&self, other: &Self) -> Ordering {
         if !approx_eq!(f64, self.entropy, other.entropy, epsilon = 1e-9) {
-            return self.entropy.total_cmp(&other.entropy).reverse();
+            return other.entropy.total_cmp(&self.entropy);
         }
 
         if self.is_potential_soln != other.is_potential_soln {
