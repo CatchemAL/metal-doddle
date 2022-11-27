@@ -1,5 +1,5 @@
 use crate::scoring::MAX_SCORE;
-use crate::word::{Word, SIZE};
+use crate::word::Word;
 use std::cmp::Ordering;
 
 mod scoring;
@@ -13,12 +13,11 @@ fn main() {
     let potential_solns: Vec<Word> = todo!();
 
     let guess_factory = EntropyGuessFactory;
-    let solver = Solver {
-        guess_factory: guess_factory,
-    };
+    let solver = Solver { guess_factory };
 
     for _i in 0..20 {
         let guess: EntropyGuess = solver.best_guess(&all_words, &potential_solns);
+        println!("Best guess is {}", guess.word);
     }
 
     let score = scoring::score(&guess, &soln);
@@ -26,6 +25,7 @@ fn main() {
     println!("Score for guess {guess} given solution {soln} is {score}.")
 }
 
+#[derive(Debug)]
 pub struct EntropyGuess {
     word: Word,
     entropy: f64,
