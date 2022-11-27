@@ -1,7 +1,7 @@
 use crate::word::{Word, SIZE};
 
 const NUM_INDICATORS: usize = 3;
-pub const MAX_SCORE: usize = NUM_INDICATORS.pow(SIZE) - 1;
+pub const MAX_SCORE: usize = NUM_INDICATORS.pow(SIZE as u32) - 1;
 
 pub const GREEN: u8 = 2;
 pub const AMBER: u8 = 1;

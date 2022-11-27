@@ -18,8 +18,7 @@ fn main() {
     };
 
     for _i in 0..20 {
-        let guesses = solver.all_guesses(&all_words, &potential_solns);
-        let best_guess = guesses.into_iter().min().expect("Guesses cannot be empty");
+        let guess: EntropyGuess = solver.best_guess(&all_words, &potential_solns);
     }
 
     let score = scoring::score(&guess, &soln);
@@ -55,7 +54,7 @@ pub struct Solver<T> {
     guess_factory: T,
 }
 
-impl<T: GuessFactory + Ord> Solver<T> {
+impl<T: GuessFactory> Solver<T> {
     fn best_guess(&self, all_words: &Vec<Word>, potential_solns: &Vec<Word>) -> T::TGuess {
         let mut histogram: Vec<u32> = vec![0; MAX_SCORE];
 
