@@ -22,11 +22,6 @@ impl Word {
         Word { vector }
     }
 
-    pub fn len(&self) -> usize {
-        // todo - probably a protocol...
-        SIZE
-    }
-
     pub fn value(&self) -> String {
         let values = self.vector.into_iter().map(|e| e + b'A').collect();
         String::from_utf8(values).unwrap()
@@ -55,18 +50,6 @@ mod tests {
 
         // Assert
         assert_eq!(4, minimum);
-    }
-
-    #[test]
-    fn create_word__lower_case__capitalizes() {
-        // Arrange
-        let word = Word::new("raise");
-
-        // Act
-        let length = word.len();
-
-        // Assert
-        assert_eq!(SIZE, length);
     }
 
     #[test]

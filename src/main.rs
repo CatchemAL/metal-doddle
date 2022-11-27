@@ -48,7 +48,7 @@ fn main() {
     let guess_factory = EntropyGuessFactory;
     let solver = Solver::new(guess_factory);
 
-    println!("Begin solve...");
+    println!("Begin solve for solution {soln}...");
     const MAX_ITERS: i32 = 20;
     for _i in 0..MAX_ITERS {
         let observed_score = scoring::score(&guess, &soln);
