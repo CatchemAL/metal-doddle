@@ -1,21 +1,42 @@
 use crate::scoring::MAX_SCORE;
 use crate::word::Word;
+use serde_json::Value;
 use std::cmp::Ordering;
+use std::fs;
 
 mod scoring;
 mod word;
 
+fn get_words() -> Vec<Word> {
+    let path = "./dictionaries/dictionary-answers-official.json";
+    let data = fs::read_to_string(path).expect("Unable to read file");
+    let json = serde_json::from_str(&data).expect("JSON was not well-formatted");
+
+    if let Value::Array(vector) = json {
+        return vector
+            .into_iter()
+            .map(|value| match value {
+                Value::String(word) => Word::new(&word),
+                _ => panic!("JSON element was not a valid string"),
+            })
+            .collect();
+    }
+
+    panic!("JSON was not a valid vector")
+}
+
 fn main() {
+    get_words();
     let guess = Word::new("RAISE");
     let soln = Word::new("TOWER");
 
-    let all_words: Vec<Word> = todo!();
-    let potential_solns: Vec<Word> = todo!();
+    let all_words: Vec<Word> = get_words();
 
     let guess_factory = EntropyGuessFactory;
     let solver = Solver { guess_factory };
 
     for _i in 0..20 {
+        let potential_solns: Vec<Word> = get_words();
         let best_guess = solver.best_guess(&all_words, potential_solns);
         println!("Best guess is {}", best_guess.word);
     }
