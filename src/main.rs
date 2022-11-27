@@ -16,8 +16,8 @@ fn main() {
     let solver = Solver { guess_factory };
 
     for _i in 0..20 {
-        let guess: EntropyGuess = solver.best_guess(&all_words, &potential_solns);
-        println!("Best guess is {}", guess.word);
+        let best_guess = solver.best_guess(&all_words, potential_solns);
+        println!("Best guess is {}", best_guess.word);
     }
 
     let score = scoring::score(&guess, &soln);
@@ -55,22 +55,25 @@ pub struct Solver<T> {
 }
 
 impl<T: GuessFactory> Solver<T> {
-    fn best_guess(&self, all_words: &Vec<Word>, potential_solns: &Vec<Word>) -> T::TGuess {
-        let mut histogram: Vec<u32> = vec![0; MAX_SCORE];
+    fn best_guess(&self, all_words: &Vec<Word>, potential_solns: Vec<Word>) -> T::TGuess {
+        self.all_guesses(all_words, potential_solns).min().unwrap()
+    }
 
-        all_words
-            .into_iter()
-            .map(|guess| {
-                histogram.reset(0);
-                for potential_soln in potential_solns {
-                    let score = scoring::score(guess, potential_soln) as usize;
-                    histogram[score] += 1;
-                }
-                let guess = self.guess_factory.create(&histogram);
-                guess
-            })
-            .min()
-            .unwrap()
+    fn all_guesses<'a>(
+        &'a self,
+        all_words: &'a Vec<Word>,
+        potential_solns: Vec<Word>,
+    ) -> impl Iterator<Item = T::TGuess> + 'a {
+        let mut histogram: Vec<u32> = vec![0; MAX_SCORE];
+        all_words.into_iter().map(move |guess| {
+            histogram.reset(0);
+            for potential_soln in &potential_solns {
+                let score = scoring::score(guess, potential_soln) as usize;
+                histogram[score] += 1;
+            }
+            let guess = self.guess_factory.create(&histogram);
+            guess
+        })
     }
 }
 

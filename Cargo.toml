@@ -6,8 +6,10 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-
-
+serde = "1.0"
 
 [dev-dependencies]
 rstest = "0.15"
+
+[build-dependencies]
+copy_to_output = "2.0"
