@@ -1,0 +1,20 @@
+{
+    "[rust]": {
+        "editor.defaultFormatter": "rust-lang.rust-analyzer", 
+        "editor.formatOnSave": true,
+    },
+    "editor.fontFamily": "Cascadia Code",
+    "editor.fontSize": 12,
+    "editor.fontLigatures": true,
+    "editor.inlayHints.fontSize": 10,
+    "rust-analyzer.inlayHints.bindingModeHints.enable": true,
+    "rust-analyzer.inlayHints.parameterHints.enable": true, // this is a bit annoying
+    "rust-analyzer.inlayHints.typeHints.enable": true,
+    "workbench.colorCustomizations": {
+        // Name of the theme you are currently using
+        "[Default Dark+]": {
+        "editorInlayHint.foreground": "#569181",
+        "editorInlayHint.background": "#18181800",
+        }
+    }
+}
