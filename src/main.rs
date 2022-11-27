@@ -1,10 +1,12 @@
 use crate::scoring::MAX_SCORE;
+use crate::solver::Solver;
 use crate::word::Word;
 use serde_json::Value;
 use std::cmp::Ordering;
 use std::fs;
 
 mod scoring;
+mod solver;
 mod word;
 
 fn get_all_words() -> Vec<Word> {
@@ -43,7 +45,7 @@ fn main() {
     let mut potential_solns: Vec<Word> = get_soln_words();
 
     let guess_factory = EntropyGuessFactory;
-    let solver = Solver { guess_factory };
+    let solver = Solver::new(guess_factory);
 
     println!("Begin solve...");
     const MAX_ITERS: i32 = 20;
@@ -51,6 +53,7 @@ fn main() {
         let observed_score = scoring::score(&guess, &soln);
         println!("Playing guess {guess} (Score = {observed_score})");
         if observed_score as usize == MAX_SCORE {
+            println!("Solved!");
             return;
         }
 
@@ -105,63 +108,6 @@ impl GuessFactory for EntropyGuessFactory {
             .sum();
 
         EntropyGuess::new(word, -entropy, is_potential_soln)
-    }
-}
-
-pub struct Solver<T> {
-    guess_factory: T,
-}
-
-impl<T: GuessFactory> Solver<T> {
-    fn best_guess(&self, all_words: &[Word], potential_solns: &[Word]) -> T::TGuess {
-        if potential_solns.len() > 2 {
-            return self.all_guesses(all_words, potential_solns).max().unwrap();
-        }
-
-        let num_solns = potential_solns.len();
-        let guess = &potential_solns[0];
-
-        // Fake a histogram. Anything will do here...
-        let mut histogram: Vec<u32> = vec![0; MAX_SCORE + 1];
-        histogram[MAX_SCORE] = 1;
-        if potential_solns.len() == 2 {
-            histogram[0] = 1;
-        }
-
-        self.guess_factory.create(guess, num_solns, &histogram)
-    }
-
-    fn all_guesses<'a>(
-        &'a self,
-        all_words: &'a [Word],
-        potential_solns: &'a [Word],
-    ) -> impl Iterator<Item = T::TGuess> + 'a {
-        let mut histogram: Vec<u32> = vec![0; MAX_SCORE + 1];
-        all_words.into_iter().map(move |guess| {
-            histogram.reset(0);
-            for potential_soln in potential_solns {
-                let score = scoring::score(guess, potential_soln) as usize;
-                histogram[score] += 1;
-            }
-            let num_solns = potential_solns.len();
-            let guess = self.guess_factory.create(guess, num_solns, &histogram);
-            guess
-        })
-    }
-}
-
-pub trait ResetExt {
-    type Element: Copy;
-    fn reset(&mut self, value: Self::Element);
-}
-
-impl<T: Copy> ResetExt for [T] {
-    type Element = T;
-
-    fn reset(&mut self, value: T) {
-        for item in self {
-            *item = value;
-        }
     }
 }
 
