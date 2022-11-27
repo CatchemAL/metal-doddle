@@ -2,6 +2,7 @@ use crate::guess::EntropyGuessFactory;
 use crate::scoring::MAX_SCORE;
 use crate::solver::Solver;
 use crate::word::Word;
+use clap::Parser;
 
 mod dictionary;
 mod guess;
@@ -9,9 +10,23 @@ mod scoring;
 mod solver;
 mod word;
 
+/// Simple program to greet a person
+#[derive(Parser, Debug)]
+#[command(author, version, about, long_about = None)]
+struct Args {
+    /// Name of the person to greet
+    #[arg(short, long)]
+    answer: String,
+
+    /// Number of times to greet
+    #[arg(short, long, default_value = "SALET")]
+    guess: String,
+}
+
 fn main() {
-    let soln = Word::new("TOWER");
-    let mut guess = Word::new("SOARE");
+    let args = Args::parse();
+    let soln = Word::new(&args.answer);
+    let mut guess = Word::new(&args.guess);
 
     println!("Loading dictionaries...");
     let all_words: Vec<Word> = dictionary::get_all_words();

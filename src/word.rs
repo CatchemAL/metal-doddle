@@ -1,8 +1,8 @@
-use std::fmt::Display;
+use std::fmt::{Debug, Display, Formatter, Result};
 
 pub const SIZE: usize = 5;
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct Word {
     pub vector: [u8; 5],
 }
@@ -31,6 +31,14 @@ impl Word {
 impl Display for Word {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.value())
+    }
+}
+
+impl Debug for Word {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        f.debug_struct("Word")
+            .field("vector", &self.value())
+            .finish()
     }
 }
 
