@@ -2,48 +2,20 @@ use crate::guess::EntropyGuessFactory;
 use crate::scoring::MAX_SCORE;
 use crate::solver::Solver;
 use crate::word::Word;
-use serde_json::Value;
-use std::fs;
 
+mod dictionary;
 mod guess;
 mod scoring;
 mod solver;
 mod word;
-
-fn get_all_words() -> Vec<Word> {
-    let path = "./dictionaries/dictionary-full-official.json";
-    get_words(path)
-}
-
-fn get_soln_words() -> Vec<Word> {
-    let path = "./dictionaries/dictionary-answers-official.json";
-    get_words(path)
-}
-
-fn get_words(path: &str) -> Vec<Word> {
-    let data = fs::read_to_string(path).expect("Unable to read file");
-    let json = serde_json::from_str(&data).expect("JSON was not well-formatted");
-
-    if let Value::Array(vector) = json {
-        return vector
-            .into_iter()
-            .map(|value| match value {
-                Value::String(word) => Word::new(&word),
-                _ => panic!("JSON element was not a valid string"),
-            })
-            .collect();
-    }
-
-    panic!("JSON was not a valid vector")
-}
 
 fn main() {
     let soln = Word::new("TOWER");
     let mut guess = Word::new("SOARE");
 
     println!("Loading dictionaries...");
-    let all_words: Vec<Word> = get_all_words();
-    let mut potential_solns: Vec<Word> = get_soln_words();
+    let all_words: Vec<Word> = dictionary::get_all_words();
+    let mut potential_solns: Vec<Word> = dictionary::get_soln_words();
 
     let guess_factory = EntropyGuessFactory;
     let solver = Solver::new(guess_factory);
@@ -62,9 +34,7 @@ fn main() {
         guess = solver.best_guess(&all_words, &potential_solns).word;
     }
 
-    let score = scoring::score(&guess, &soln);
-
-    println!("Score for guess {guess} given solution {soln} is {score}.")
+    println!("Failed to converge after {MAX_ITERS} iterations.")
 }
 
 fn trim_potential_solns(guess: &Word, observed_score: u8, potential_solns: &[Word]) -> Vec<Word> {
