@@ -1,6 +1,6 @@
+use crate::guess::GuessFactory;
 use crate::scoring;
 use crate::word::Word;
-use crate::GuessFactory;
 use crate::MAX_SCORE;
 
 pub struct Solver<T> {
@@ -20,7 +20,7 @@ impl<T: GuessFactory> Solver<T> {
 
     pub fn best_guess(&self, all_words: &[Word], potential_solns: &[Word]) -> T::TGuess {
         if potential_solns.len() > 2 {
-            return self.all_guesses(all_words, potential_solns).max().unwrap();
+            return self.all_guesses(all_words, potential_solns).min().unwrap();
         }
 
         let num_solns = potential_solns.len();
