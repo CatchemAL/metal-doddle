@@ -7,41 +7,29 @@ pub const GREEN: u8 = 2;
 pub const AMBER: u8 = 1;
 pub const GREY: u8 = 0;
 
+#[inline]
 pub fn score(guess: &Word, soln: &Word) -> u8 {
     let mut value: u8 = GREY;
 
     let guess = &guess.vector;
     let soln = &soln.vector;
     let powers: [u8; SIZE] = [81, 27, 9, 3, 1];
+    let mut misplaced = [0_u8; 26];
 
-    for i in 0..SIZE {
-        let letter = guess[i];
-        if letter == soln[i] {
+    for (i, (&g, &s)) in guess.iter().zip(soln).enumerate() {
+        if g == s {
             value += GREEN * powers[i];
         } else {
-            // We need to determine if partial match
-            let mut num_times_in_soln: u8 = 0;
-            for j in 0..SIZE {
-                if letter == soln[j] && guess[j] != soln[j] {
-                    num_times_in_soln += 1;
-                }
-            }
+            misplaced[s as usize] += 1;
+        }
+    }
 
-            if num_times_in_soln == 0 {
-                continue;
-            }
-
-            let mut num_times_already_seen: u8 = 0;
-            for j in 0..i {
-                if letter == guess[j] && guess[j] != soln[j] {
-                    num_times_already_seen += 1;
-                }
-            }
-
-            let is_partial_match = num_times_already_seen < num_times_in_soln;
-            if is_partial_match {
-                value += AMBER * powers[i];
-            }
+    for (i, (&g, &s)) in guess.iter().zip(soln).enumerate() {
+        if g == s {
+            continue;
+        } else if misplaced[g as usize] > 0 {
+            value += AMBER * powers[i];
+            misplaced[g as usize] -= 1;
         }
     }
 
