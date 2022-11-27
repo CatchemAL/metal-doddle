@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 pub const SIZE: usize = 5;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Word {
     pub vector: [u8; 5],
 }
