@@ -1,7 +1,7 @@
 <img src="https://raw.githubusercontent.com/CatchemAl/metal-doddle/main/images/MetalDoddleLogo.png" width="420">
 
-# metal-doddle
-An lightweight Doddle implementation in rust
+# Metal Doddle
+A rusty implementation of [Doddle](https://pypi.org/project/doddle/).
 
 
 ## Algorithm
