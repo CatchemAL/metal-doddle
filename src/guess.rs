@@ -73,30 +73,30 @@ impl Algorithm for EntropyAlgorithm {
 // todo add macro for comparisons
 impl PartialEq for EntropyGuess {
     fn eq(&self, other: &Self) -> bool {
-        matches!(self.cmp(&other), Ordering::Equal)
+        matches!(self.cmp(other), Ordering::Equal)
     }
 }
 impl PartialOrd for EntropyGuess {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.cmp(&other))
+        Some(self.cmp(other))
     }
     fn lt(&self, other: &Self) -> bool {
-        matches!(self.cmp(&other), Ordering::Less)
+        matches!(self.cmp(other), Ordering::Less)
     }
     fn le(&self, other: &Self) -> bool {
-        matches!(self.cmp(&other), Ordering::Equal | Ordering::Less)
+        matches!(self.cmp(other), Ordering::Equal | Ordering::Less)
     }
     fn gt(&self, other: &Self) -> bool {
-        matches!(self.cmp(&other), Ordering::Greater)
+        matches!(self.cmp(other), Ordering::Greater)
     }
     fn ge(&self, other: &Self) -> bool {
-        matches!(self.cmp(&other), Ordering::Equal | Ordering::Greater)
+        matches!(self.cmp(other), Ordering::Equal | Ordering::Greater)
     }
 }
 impl Eq for EntropyGuess {}
 impl Ord for EntropyGuess {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.cmp(&other)
+        self.cmp(other)
     }
 }
 
@@ -155,30 +155,30 @@ impl Algorithm for MinimaxAlgorithm {
 
 impl PartialEq for MinimaxGuess {
     fn eq(&self, other: &Self) -> bool {
-        matches!(self.cmp(&other), Ordering::Equal)
+        matches!(self.cmp(other), Ordering::Equal)
     }
 }
 impl PartialOrd for MinimaxGuess {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.cmp(&other))
+        Some(self.cmp(other))
     }
     fn lt(&self, other: &Self) -> bool {
-        matches!(self.cmp(&other), Ordering::Less)
+        matches!(self.cmp(other), Ordering::Less)
     }
     fn le(&self, other: &Self) -> bool {
-        matches!(self.cmp(&other), Ordering::Equal | Ordering::Less)
+        matches!(self.cmp(other), Ordering::Equal | Ordering::Less)
     }
     fn gt(&self, other: &Self) -> bool {
-        matches!(self.cmp(&other), Ordering::Greater)
+        matches!(self.cmp(other), Ordering::Greater)
     }
     fn ge(&self, other: &Self) -> bool {
-        matches!(self.cmp(&other), Ordering::Equal | Ordering::Greater)
+        matches!(self.cmp(other), Ordering::Equal | Ordering::Greater)
     }
 }
 impl Eq for MinimaxGuess {}
 
 impl Ord for MinimaxGuess {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.cmp(&other)
+        self.cmp(other)
     }
 }

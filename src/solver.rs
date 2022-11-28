@@ -36,7 +36,7 @@ impl<T: Algorithm> Solver<T> {
 
         const MAX_ITERS: i32 = 20;
         for _i in 0..MAX_ITERS {
-            let observed_score = scoring::score(&guess, &soln);
+            let observed_score = scoring::score(&guess, soln);
             potential_solns = self.trim_solns(&guess, observed_score, &potential_solns);
             scoreboard.add_row(soln.clone(), guess, observed_score, potential_solns.len());
             self.reporter.print_tail(&scoreboard);
@@ -77,15 +77,14 @@ impl<T: Algorithm> Solver<T> {
         all_words: &'a [Word],
         potential_solns: &'a [Word],
     ) -> impl Iterator<Item = T::TGuess> + 'a {
-        all_words.into_iter().map(move |guess| {
+        all_words.iter().map(move |guess| {
             let mut histogram = [0_u32; MAX_SCORE + 1];
             for potential_soln in potential_solns {
                 let score = scoring::score(guess, potential_soln) as usize;
                 histogram[score] += 1;
             }
             let num_solns = potential_solns.len();
-            let guess = self.algorithm.make_guess(guess, num_solns, &histogram);
-            guess
+            self.algorithm.make_guess(guess, num_solns, &histogram)
         })
     }
 
@@ -93,7 +92,7 @@ impl<T: Algorithm> Solver<T> {
         potential_solns
             .iter()
             .filter(|soln| scoring::score(guess, soln) == observed_score)
-            .map(|x| x.clone())
+            .cloned()
             .collect()
     }
 }

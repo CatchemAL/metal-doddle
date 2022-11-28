@@ -1,15 +1,8 @@
 use crate::{scoring::MAX_SCORE, word::Word};
 
+#[derive(Default)]
 pub struct Scoreboard {
     pub rows: Vec<ScoreboardRow>,
-}
-
-impl Default for Scoreboard {
-    fn default() -> Self {
-        Self {
-            rows: Default::default(),
-        }
-    }
 }
 
 impl Scoreboard {
