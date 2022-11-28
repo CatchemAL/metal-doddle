@@ -19,7 +19,7 @@
                     "kind": "bin"
                 }
             },
-            "args": ["--answer=POWER"],
+            "args": ["--answer=POWER", "--guess=SPACE", "--solver=ENTROPY"],
             "cwd": "${workspaceFolder}"
         },
         {
@@ -38,7 +38,7 @@
                     "kind": "bin"
                 }
             },
-            "args": ["--answer=POWER"],
+            "args": [],
             "cwd": "${workspaceFolder}"
         }
     ]

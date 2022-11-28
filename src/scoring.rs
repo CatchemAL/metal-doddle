@@ -1,4 +1,5 @@
 use crate::word::{Word, SIZE};
+use radix_fmt::radix_3;
 
 const NUM_INDICATORS: usize = 3;
 pub const MAX_SCORE: usize = NUM_INDICATORS.pow(SIZE as u32) - 1;
@@ -6,6 +7,15 @@ pub const MAX_SCORE: usize = NUM_INDICATORS.pow(SIZE as u32) - 1;
 pub const GREEN: u8 = 2;
 pub const AMBER: u8 = 1;
 pub const GREY: u8 = 0;
+
+pub fn score_to_str(score: u8) -> String {
+    format!("{:0>5}", radix_3(score).to_string())
+}
+
+#[allow(dead_code)]
+pub fn str_to_score(ternary: &str) -> u8 {
+    usize::from_str_radix(ternary, 3).unwrap() as u8
+}
 
 #[inline]
 pub fn score(guess: &Word, soln: &Word) -> u8 {
@@ -90,12 +100,27 @@ mod tests {
         // Arrange
         let guess = Word::new(guess);
         let soln = Word::new(soln);
-        let expected = isize::from_str_radix(ternary_score, 3).unwrap();
+        let expected = str_to_score(ternary_score);
 
         // Act
-        let actual = score(&guess, &soln) as isize;
+        let actual = score(&guess, &soln);
 
         // Assert
         assert_eq!(expected, actual);
+    }
+
+    #[rstest]
+    fn convert_ternary__both_ways__roundtrips() {
+        for i in 0..MAX_SCORE {
+            // Arrange
+            let expected = i as u8;
+
+            // Act
+            let ternary = score_to_str(expected);
+            let actual = str_to_score(&ternary);
+
+            // Assert
+            assert_eq!(expected, actual);
+        }
     }
 }
