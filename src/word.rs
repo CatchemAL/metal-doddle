@@ -28,6 +28,12 @@ impl Word {
     }
 }
 
+impl From<String> for Word {
+    fn from(value: String) -> Self {
+        Self::new(&value)
+    }
+}
+
 impl Display for Word {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.value())
@@ -49,25 +55,26 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_minimum__for_ints__returns() {
-        // Arrange
-        let integers: Vec<i32> = vec![15, 22, 73, 4, 5];
-
-        // Act
-        let minimum = integers.into_iter().min().unwrap();
-
-        // Assert
-        assert_eq!(4, minimum);
-    }
-
-    #[test]
     fn display__via_format__displays() {
         // Arrange
         let word = Word::new("space");
         let expected = "Word is: SPACE".to_string();
 
         // Act
-        let actual = format!("Word is: {}", word);
+        let actual = format!("Word is: {word}");
+
+        // Assert
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn debug__via_format__debugs() {
+        // Arrange
+        let word = Word::new("space");
+        let expected = "Word { vector: \"SPACE\" }".to_string();
+
+        // Act
+        let actual = format!("{word:?}");
 
         // Assert
         assert_eq!(expected, actual);

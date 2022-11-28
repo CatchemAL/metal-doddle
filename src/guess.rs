@@ -182,3 +182,65 @@ impl Ord for MinimaxGuess {
         self.cmp(other)
     }
 }
+
+#[cfg(test)]
+#[allow(non_snake_case)]
+mod tests {
+
+    use super::*;
+
+    #[test]
+    fn test_minimax_guess_where_largest_bucket_differs() {
+        // Arrange
+        let word1 = Word::new("SNAKE");
+        let word2 = Word::new("SHARK");
+        let is_potential_soln = true;
+        let guess1 = MinimaxGuess::new(word1, 20, is_potential_soln);
+        let guess2 = MinimaxGuess::new(word2, 25, is_potential_soln);
+
+        // Act
+        let is_better = guess1 < guess2;
+        let is_worse = guess1 > guess2;
+
+        // Assert
+        assert!(is_better);
+        assert!(!is_worse);
+    }
+
+    #[test]
+    fn test_minimax_guess_where_common_differs() {
+        // Arrange
+        let word1 = Word::new("SNAKE");
+        let word2 = Word::new("SHARK");
+        let is_potential_soln = true;
+        let guess1 = MinimaxGuess::new(word1, 25, is_potential_soln);
+        let guess2 = MinimaxGuess::new(word2, 25, !is_potential_soln);
+
+        // Act
+        let is_better = guess1 < guess2;
+        let is_worse = guess1 > guess2;
+
+        // Assert
+        assert!(is_better);
+        assert!(!is_worse);
+    }
+
+    #[test]
+    fn test_minimax_guess_where_all_same_is_equal() {
+        // Arrange
+        let word1 = Word::new("SLATE");
+        let word2 = Word::new("FREAK");
+        let is_potential_soln = true;
+        let guess1 = MinimaxGuess::new(word1, 25, is_potential_soln);
+        let guess2 = MinimaxGuess::new(word2, 25, is_potential_soln);
+
+        // Act
+        let is_better = guess1 < guess2;
+        let is_worse = guess1 > guess2;
+
+        // Assert
+        assert_eq!(guess1, guess2);
+        assert!(!is_better);
+        assert!(!is_worse);
+    }
+}
