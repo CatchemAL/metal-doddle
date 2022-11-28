@@ -6,6 +6,7 @@ A rusty implementation of [Doddle](https://pypi.org/project/doddle/).
 
 
 [![metal-doddle build server](https://github.com/CatchemAl/metal-doddle/actions/workflows/rust.yml/badge.svg)](https://github.com/CatchemAl/metal-doddle/actions)
+[![codecov](https://codecov.io/gh/CatchemAL/metal-doddle/branch/main/graph/badge.svg?token=QFW5HNP9PW)](https://codecov.io/gh/CatchemAL/metal-doddle)
 
 
 ## Algorithm
