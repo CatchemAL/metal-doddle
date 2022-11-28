@@ -1,7 +1,7 @@
 {
     "[rust]": {
         "editor.defaultFormatter": "rust-lang.rust-analyzer", 
-        "editor.formatOnSave": false,
+        "editor.formatOnSave": true,
     },
     "editor.fontFamily": "Cascadia Code",
     "editor.fontSize": 12,
