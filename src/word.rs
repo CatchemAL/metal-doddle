@@ -2,7 +2,7 @@ use std::fmt::{Debug, Display, Formatter, Result};
 
 pub const SIZE: usize = 5;
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Eq)]
 pub struct Word {
     pub vector: [u8; 5],
 }
