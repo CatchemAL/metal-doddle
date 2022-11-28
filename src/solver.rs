@@ -6,6 +6,10 @@ use crate::scoring;
 use crate::scoring::MAX_SCORE;
 use crate::word::Word;
 
+pub trait Solve {
+    fn solve(&self, soln: &Word, opening_guess: Word) -> Option<Scoreboard>;
+}
+
 pub struct Solver<T> {
     algorithm: T,
     reporter: Box<dyn Reporter>,
@@ -19,7 +23,7 @@ impl<T: Algorithm> Solver<T> {
         }
     }
 
-    pub fn play(&self, soln: &Word, opening_guess: Word) -> Option<Scoreboard> {
+    pub fn run(&self, soln: &Word, opening_guess: Word) -> Option<Scoreboard> {
         println!("Loading dictionaries...");
         let all_words: Vec<Word> = dictionary::get_all_words();
         let mut potential_solns: Vec<Word> = dictionary::get_soln_words();
@@ -91,5 +95,11 @@ impl<T: Algorithm> Solver<T> {
             .filter(|soln| scoring::score(guess, soln) == observed_score)
             .map(|x| x.clone())
             .collect()
+    }
+}
+
+impl<T: Algorithm> Solve for Solver<T> {
+    fn solve(&self, soln: &Word, opening_guess: Word) -> Option<Scoreboard> {
+        self.run(soln, opening_guess)
     }
 }

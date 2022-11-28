@@ -17,7 +17,7 @@ fn main() {
     let guess = Word::new(&args.guess);
 
     let solver = factory::get_solver(args.solver);
-    solver.play(&soln, guess);
+    solver.solve(&soln, guess);
 }
 
 /// Simple program to greet a person

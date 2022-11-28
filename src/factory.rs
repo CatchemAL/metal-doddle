@@ -1,7 +1,8 @@
-use crate::guess::Algorithm;
 use crate::guess::EntropyAlgorithm;
+use crate::guess::MinimaxAlgorithm;
 use crate::reporting::NullReporter;
 use crate::reporting::{ConsoleReporter, Reporter};
+use crate::solver::Solve;
 use crate::solver::Solver;
 
 use clap::ValueEnum;
@@ -12,17 +13,19 @@ pub enum SolverType {
     Minimax,
 }
 
-pub fn get_solver(solver: SolverType) -> Solver<impl Algorithm> {
+pub fn get_solver(solver: SolverType) -> Box<dyn Solve> {
     let reporter = get_reporter(true);
 
     match solver {
         SolverType::Entropy => {
             let guess_factory = EntropyAlgorithm;
-            Solver::new(guess_factory, reporter)
+            let solver = Solver::new(guess_factory, reporter);
+            Box::new(solver)
         }
         SolverType::Minimax => {
-            let guess_factory = EntropyAlgorithm;
-            Solver::new(guess_factory, reporter)
+            let guess_factory = MinimaxAlgorithm;
+            let solver = Solver::new(guess_factory, reporter);
+            Box::new(solver)
         }
     }
 }
