@@ -243,4 +243,60 @@ mod tests {
         assert!(!is_better);
         assert!(!is_worse);
     }
+
+    #[test]
+    fn test_entropy_guess_where_entropy_differs() {
+        // Arrange
+        let word1 = Word::new("SNAKE");
+        let word2 = Word::new("SHARK");
+        let is_potential_soln = true;
+        let guess1 = EntropyGuess::new(word1, 12.1, is_potential_soln);
+        let guess2 = EntropyGuess::new(word2, 10.0, is_potential_soln);
+
+        // Act
+        let is_better = guess1 < guess2;
+        let is_worse = guess1 > guess2;
+
+        // Assert
+        assert!(is_better);
+        assert!(!is_worse);
+    }
+
+    #[test]
+    fn test_entropy_guess_where_common_differs() {
+        // Arrange
+        let word1 = Word::new("SNAKE");
+        let word2 = Word::new("SHARK");
+        let is_potential_soln = true;
+        let entropy = 10.0;
+        let guess1 = EntropyGuess::new(word1, entropy, is_potential_soln);
+        let guess2 = EntropyGuess::new(word2, entropy, !is_potential_soln);
+
+        // Act
+        let is_better = guess1 < guess2;
+        let is_worse = guess1 > guess2;
+
+        // Assert
+        assert!(is_better);
+        assert!(!is_worse);
+    }
+
+    #[test]
+    fn test_entropy_guess_where_all_same_is_equal() {
+        // Arrange
+        let word1 = Word::new("SNAKE");
+        let word2 = Word::new("SHARK");
+        let is_potential_soln = true;
+        let entropy = 10.0;
+        let guess1 = EntropyGuess::new(word1, entropy, is_potential_soln);
+        let guess2 = EntropyGuess::new(word2, entropy, is_potential_soln);
+
+        // Act
+        let is_better = guess1 < guess2;
+        let is_worse = guess1 > guess2;
+
+        // Assert
+        assert!(!is_better);
+        assert!(!is_worse);
+    }
 }
