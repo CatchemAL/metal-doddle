@@ -10,6 +10,7 @@
     "rust-analyzer.inlayHints.bindingModeHints.enable": true,
     "rust-analyzer.inlayHints.parameterHints.enable": true, // this is a bit annoying
     "rust-analyzer.inlayHints.typeHints.enable": true,
+    "rust-analyzer.checkOnSave.command": "clippy",
     "workbench.colorCustomizations": {
         // Name of the theme you are currently using
         "[Default Dark+]": {
