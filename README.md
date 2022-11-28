@@ -1,7 +1,11 @@
 <img src="https://raw.githubusercontent.com/CatchemAl/metal-doddle/main/images/MetalDoddleLogo.png" width="420">
 
 # Metal Doddle
+
 A rusty implementation of [Doddle](https://pypi.org/project/doddle/).
+
+
+[![metal-doddle build server](https://github.com/CatchemAl/metal-doddle/actions/workflows/rust.yml/badge.svg)](https://github.com/CatchemAl/metal-doddle/actions)
 
 
 ## Algorithm
