@@ -200,11 +200,15 @@ mod tests {
 
         // Act
         let is_better = guess1 < guess2;
+        let is_better_or_same = guess1 <= guess2;
         let is_worse = guess1 > guess2;
+        let is_worse_or_same = guess1 >= guess2;
 
         // Assert
         assert!(is_better);
+        assert!(is_better_or_same);
         assert!(!is_worse);
+        assert!(!is_worse_or_same);
     }
 
     #[test]
@@ -255,11 +259,15 @@ mod tests {
 
         // Act
         let is_better = guess1 < guess2;
+        let is_better_or_same = guess1 <= guess2;
         let is_worse = guess1 > guess2;
+        let is_worse_or_same = guess1 >= guess2;
 
         // Assert
         assert!(is_better);
+        assert!(is_better_or_same);
         assert!(!is_worse);
+        assert!(!is_worse_or_same);
     }
 
     #[test]
