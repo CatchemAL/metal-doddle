@@ -20,6 +20,8 @@ jobs:
       run: cargo build --verbose
     - name: Check formatting
       run: cargo fmt --check
+    - name: Check linting
+      run: cargo clippy
     - name: Run tests
       run: cargo test --verbose
     - name: Codecov
