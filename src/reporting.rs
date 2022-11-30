@@ -1,4 +1,5 @@
 use colored::Colorize;
+use itertools::Itertools;
 
 use crate::boards::{Scoreboard, ScoreboardRow};
 use crate::scoring::{score_to_str, MAX_SCORE};
@@ -22,6 +23,31 @@ pub struct ConsoleReporter;
 impl ConsoleReporter {
     fn build_header_str() -> String {
         "| # | Soln. | Guess | Score | Poss. |\n|---|-------|-------|-------|-------|".to_string()
+    }
+
+    fn report(scoreboard: &Scoreboard) -> String {
+        let mut rows = Vec::new();
+        let header = ConsoleReporter::build_header_str();
+        rows.push(header);
+
+        for row in &scoreboard.rows {
+            let row_str = ConsoleReporter::build_row_str(row);
+            rows.push(row_str);
+        }
+
+        rows.iter().join("\n")
+    }
+
+    fn report_tail(scoreboard: &Scoreboard) -> String {
+        let last_row = scoreboard.rows.last().unwrap();
+        let row_str = ConsoleReporter::build_row_str(last_row);
+
+        if scoreboard.len() <= 1 {
+            let header = ConsoleReporter::build_header_str();
+            [header, row_str].join("\n")
+        } else {
+            row_str
+        }
     }
 
     fn build_row_str(row: &ScoreboardRow) -> String {
@@ -65,32 +91,88 @@ impl ConsoleReporter {
 
 impl Reporter for ConsoleReporter {
     fn print(&self, scoreboard: &Scoreboard) {
-        let header = ConsoleReporter::build_header_str();
-        println!("{header}");
-
-        for row in &scoreboard.rows {
-            let row_str = ConsoleReporter::build_row_str(row);
-            println!("{row_str}");
-        }
+        let result = ConsoleReporter::report(scoreboard);
+        println!("{result}");
     }
 
     fn print_tail(&self, scoreboard: &Scoreboard) {
-        if scoreboard.len() == 0 {
-            return;
-        }
-
-        if scoreboard.len() == 1 {
-            let header = ConsoleReporter::build_header_str();
-            println!("{header}");
-        }
-
-        let last_row = scoreboard.rows.last().unwrap();
-        let row_str = ConsoleReporter::build_row_str(last_row);
-        println!("{row_str}");
+        let result = ConsoleReporter::report_tail(scoreboard);
+        println!("{result}");
     }
 
     fn report_failure(&self, scoreboard: &Scoreboard) {
         let num = scoreboard.len();
         println!("Failed to converge after {num} iterations.");
+    }
+}
+
+#[cfg(test)]
+#[allow(non_snake_case)]
+mod tests {
+
+    use super::*;
+    use rstest::{fixture, rstest};
+
+    #[rstest]
+    fn report_failure__with_scoreboard__prints(scoreboard: Scoreboard) {
+        // Arrange
+        let sut = ConsoleReporter;
+
+        // Act
+        sut.report_failure(&scoreboard);
+    }
+
+    #[rstest]
+    fn print_tail__with_scoreboard__prints(scoreboard: Scoreboard) {
+        // Act
+        let actual = ConsoleReporter::report_tail(&scoreboard);
+
+        // Assert
+        assert!(actual.len() > 10);
+    }
+
+    #[rstest]
+    fn print_scoreboard__with_scoreboard__reports(scoreboard: Scoreboard) {
+        // Act
+        let actual = ConsoleReporter::report(&scoreboard);
+
+        // Assert
+        assert!(actual.len() > 10);
+    }
+
+    #[fixture]
+    fn scoreboard() -> Scoreboard {
+        // Arrange
+        let mut rows = Vec::new();
+
+        let row1 = ScoreboardRow {
+            n: 1,
+            soln: "SNAKE".into(),
+            guess: "SOARE".into(),
+            score: 42,
+            num_left: 123,
+        };
+
+        let row2 = ScoreboardRow {
+            n: 1,
+            soln: "SNAKE".into(),
+            guess: "CLINT".into(),
+            score: 142,
+            num_left: 3,
+        };
+
+        let row3 = ScoreboardRow {
+            n: 1,
+            soln: "SNAKE".into(),
+            guess: "SNAKE".into(),
+            score: MAX_SCORE as u8,
+            num_left: 1,
+        };
+
+        rows.push(row1);
+        rows.push(row2);
+        rows.push(row3);
+
+        Scoreboard { rows }
     }
 }
