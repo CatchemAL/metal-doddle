@@ -1,5 +1,5 @@
 use crate::boards::Scoreboard;
-use crate::dictionary;
+use crate::dictionary::Dictionary;
 use crate::guess::Algorithm;
 use crate::reporting::Reporter;
 use crate::scoring;
@@ -13,20 +13,26 @@ pub trait Solve {
 pub struct Solver<T> {
     algorithm: T,
     reporter: Box<dyn Reporter>,
+    dictionary: Dictionary,
 }
 
 impl<T: Algorithm> Solver<T> {
-    pub fn new(algorithm: T, reporter: Box<dyn Reporter>) -> Solver<T> {
+    pub fn new(algorithm: T, reporter: Box<dyn Reporter>, dictionary: Dictionary) -> Solver<T> {
         Solver {
             algorithm,
             reporter,
+            dictionary,
         }
     }
 
     pub fn run(&self, soln: &Word, opening_guess: Word) -> Option<Scoreboard> {
         println!("Loading dictionaries...");
-        let all_words: Vec<Word> = dictionary::get_all_words();
-        let mut potential_solns: Vec<Word> = dictionary::get_soln_words();
+        let &Dictionary {
+            ref all_words,
+            ref potential_solns,
+        } = &self.dictionary;
+
+        let mut potential_solns: Vec<Word> = potential_solns.to_vec();
 
         println!("Begin solve for solution {soln}...\n");
         use std::time::Instant;
@@ -47,7 +53,7 @@ impl<T: Algorithm> Solver<T> {
                 return Some(scoreboard);
             }
 
-            guess = self.best_guess(&all_words, &potential_solns).into();
+            guess = self.best_guess(all_words, &potential_solns).into();
         }
 
         self.reporter.report_failure(&scoreboard);

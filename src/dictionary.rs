@@ -7,6 +7,11 @@ use crate::word::Word;
 const ALL_WORDS: &str = "./dictionaries/dictionary-full-official.json";
 const SOLUTIONS: &str = "./dictionaries/dictionary-answers-official.json";
 
+pub struct Dictionary {
+    pub all_words: Vec<Word>,
+    pub potential_solns: Vec<Word>,
+}
+
 pub fn get_all_words() -> Vec<Word> {
     let all_words = get_words(ALL_WORDS);
     let solutions = get_words(SOLUTIONS);

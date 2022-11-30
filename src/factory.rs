@@ -1,9 +1,12 @@
+use crate::dictionary;
+use crate::dictionary::Dictionary;
 use crate::guess::EntropyAlgorithm;
 use crate::guess::MinimaxAlgorithm;
 use crate::reporting::NullReporter;
 use crate::reporting::{ConsoleReporter, Reporter};
 use crate::solver::Solve;
 use crate::solver::Solver;
+use crate::word::Word;
 
 use clap::ValueEnum;
 
@@ -16,15 +19,22 @@ pub enum SolverType {
 pub fn get_solver(solver: SolverType) -> Box<dyn Solve> {
     let reporter = get_reporter(true);
 
+    let all_words: Vec<Word> = dictionary::get_all_words();
+    let potential_solns: Vec<Word> = dictionary::get_soln_words();
+    let dictionary = Dictionary {
+        all_words,
+        potential_solns,
+    };
+
     match solver {
         SolverType::Entropy => {
-            let guess_factory = EntropyAlgorithm;
-            let solver = Solver::new(guess_factory, reporter);
+            let algorithm = EntropyAlgorithm;
+            let solver = Solver::new(algorithm, reporter, dictionary);
             Box::new(solver)
         }
         SolverType::Minimax => {
-            let guess_factory = MinimaxAlgorithm;
-            let solver = Solver::new(guess_factory, reporter);
+            let algorithm = MinimaxAlgorithm;
+            let solver = Solver::new(algorithm, reporter, dictionary);
             Box::new(solver)
         }
     }
