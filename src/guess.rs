@@ -187,7 +187,11 @@ impl Ord for MinimaxGuess {
 #[allow(non_snake_case)]
 mod tests {
 
+    use crate::scoring::MAX_SCORE;
+
     use super::*;
+    use float_cmp::assert_approx_eq;
+    use rstest::{fixture, rstest};
 
     #[test]
     fn test_minimax_guess_where_largest_bucket_differs() {
@@ -306,5 +310,61 @@ mod tests {
         // Assert
         assert!(!is_better);
         assert!(!is_worse);
+    }
+
+    #[rstest]
+    fn make_guess__for_minimax__makes(histogram_potential_soln: Vec<u32>) {
+        // Arrange
+        let sut = MinimaxAlgorithm;
+        let guess: Word = "SOARE".into();
+        let num_solns: u32 = histogram_potential_soln.iter().sum();
+
+        // Act
+        let actual = sut.make_guess(&guess, num_solns as usize, &histogram_potential_soln);
+
+        // Assert
+        assert_eq!(7, actual.largest_bucket);
+        assert!(actual.is_potential_soln);
+    }
+
+    #[rstest]
+    fn make_guess__for_entropy__makes(histogram_uncommon_word: Vec<u32>) {
+        // Arrange
+        let sut = EntropyAlgorithm;
+        let guess: Word = "SOARE".into();
+        let num_solns: u32 = histogram_uncommon_word.iter().sum();
+
+        // Act
+        let actual = sut.make_guess(&guess, num_solns as usize, &histogram_uncommon_word);
+
+        // Assert
+        assert_approx_eq!(f64, 2_f64, actual.entropy, epsilon = 1e-8);
+        assert!(!actual.is_potential_soln);
+    }
+
+    #[fixture]
+    fn histogram_potential_soln() -> Vec<u32> {
+        // Arrange
+        let mut rows = vec![0_u32; MAX_SCORE + 1];
+
+        rows[0] = 1;
+        rows[1] = 7;
+        rows[2] = 1;
+        rows[MAX_SCORE] = 1;
+
+        rows
+    }
+
+    #[fixture]
+    fn histogram_uncommon_word() -> Vec<u32> {
+        // Arrange
+        let mut rows = vec![0_u32; MAX_SCORE + 1];
+
+        rows[0] = 1;
+        rows[1] = 1;
+        rows[2] = 1;
+        rows[3] = 1;
+
+        rows
     }
 }
