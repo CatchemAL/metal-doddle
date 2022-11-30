@@ -108,3 +108,47 @@ impl<T: Algorithm> Solve for Solver<T> {
         self.run(soln, opening_guess)
     }
 }
+
+#[cfg(test)]
+#[allow(non_snake_case)]
+mod tests {
+
+    use crate::{guess::MinimaxAlgorithm, reporting::NullReporter};
+
+    use super::*;
+    use rstest::{fixture, rstest};
+
+    #[rstest]
+    fn report_failure__with_scoreboard__prints(dictionary: Dictionary) {
+        // Arrange
+        let algorithm = MinimaxAlgorithm;
+        let reporter = Box::new(NullReporter);
+        let sut = Solver::new(algorithm, reporter, dictionary);
+        let opening_guess: Word = "SALET".into();
+        let soln: Word = "POWER".into();
+
+        // Act
+        let actual = sut.solve(&soln, opening_guess);
+
+        // Assert
+        assert!(matches!(actual, Some(scoreboard) if scoreboard.len() == 3));
+    }
+
+    #[fixture]
+    fn dictionary() -> Dictionary {
+        let all_words = vec![
+            "SALET".into(),
+            "TOWER".into(),
+            "SOARE".into(),
+            "ROWER".into(),
+            "POWER".into(),
+        ];
+
+        let potential_solns = vec!["TOWER".into(), "ROWER".into(), "POWER".into()];
+
+        Dictionary {
+            all_words,
+            potential_solns,
+        }
+    }
+}
